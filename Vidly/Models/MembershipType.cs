@@ -14,5 +14,11 @@ namespace Vidly.Models
         public byte DiscountRate { get; set; }
         [StringLength(255)]
         public string Name { get; set; }
+
+        //Refactoring magic numbers
+        public static readonly byte Unknown = 0;
+        public static readonly byte PayasYouGo = 1;
+
+
     }
 }
