@@ -1,5 +1,6 @@
 ﻿using AutoMapper;
 using System;
+using System.Data.Entity;
 using System.Collections.Generic;
 using System.Linq;
 using System.Net;
@@ -20,9 +21,13 @@ namespace Vidly.Controllers.Api
         }
 
         //GET /api/customers
-        public IEnumerable<CustomerDto> GetCustomers()
+        public IHttpActionResult GetCustomers()
         {
-            return _context.Customers.ToList().Select(Mapper.Map<Customer, CustomerDto>);
+            var customerDtos = _context.Customers
+                .Include(c => c.MembershipType)
+                .ToList()
+                .Select(Mapper.Map<Customer, CustomerDto>); //eager loading cutomers with their membership types
+            return Ok(customerDtos);
         }
 
         //GET /api/customer /1
@@ -36,7 +41,7 @@ namespace Vidly.Controllers.Api
             return Ok(Mapper.Map<Customer, CustomerDto>(customer));
         }
 
-        //POST /api/customer
+        //POST /api/customers
         [HttpPost] //since we are creating a resource
         public IHttpActionResult CreateCustomer(CustomerDto customerDto)
         {
